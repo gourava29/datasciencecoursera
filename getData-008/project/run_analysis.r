@@ -106,6 +106,6 @@ filterFeature<-function(regex){
 setkey(finalDt, subject, activityName, featType, featAcceleration, featInstrument, featJerk, featMagnitude, featOperation, featAxis)
 tidyDt <- finalDt[, list(count = .N, average = mean(value)), by=key(finalDt)]
 
-write.table(tidyDy,"tidyDataOutput.txt")
+write.table(tidyDt,"tidyDataOutput.txt")
 
 
