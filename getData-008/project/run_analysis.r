@@ -71,21 +71,21 @@ filterFeature<-function(regex){
     n<-2
     y<-matrix(seq(1, n), nrow=n)
     x<-matrix(c(filterFeature("^t"), filterFeature("^f")), ncol=nrow(y))
-    dt$featType <- factor(x %*% y, labels=c("Time", "Freq"))
+    finalDt$featType <- factor(x %*% y, labels=c("Time", "Freq"))
     
     #calculate featInstrument which means which instrument(accelerometer or gyroscope) the action belongs 
     # actions which contains "Acc" or "Gyro"
     x<-matrix(c(filterFeature("Acc"), filterFeature("Gyro")), ncol=nrow(y))
-    dt$featInstrument <- factor(x %*% y, labels=c("Accelerometer", "Gyroscope"))
+    finalDt$featInstrument <- factor(x %*% y, labels=c("Accelerometer", "Gyroscope"))
 
     #calculate featAcceleration which means which type of acceleration
     # actions which contains "BodyAcc" or "GravityAcc"
     x<-matrix(c(filterFeature("BodyAcc"), filterFeature("GravityAcc")), ncol=nrow(y))
-    dt$featAcceleration <- factor(x %*% y, labels=c(NA, "Body", "Gravity"))
+    finalDt$featAcceleration <- factor(x %*% y, labels=c(NA, "Body", "Gravity"))
 
     #calculate featOperation which means the type of operation which is mean or std
     x <- matrix(c(filterFeature("mean()"), filterFeature("std()")), ncol=nrow(y))
-    dt$featOperation <- factor(x %*% y, labels=c("Mean", "SD"))
+    finalDt$featOperation <- factor(x %*% y, labels=c("Mean", "SD"))
 
 
 #to map the data with 3 types we would create a 3*1 matrix which would be logical matrix and map it with the matrix data which we get after 
@@ -95,16 +95,16 @@ filterFeature<-function(regex){
     n <- 3
     y <- matrix(seq(1, n), nrow=n)
     x <- matrix(c(filterFeature("-X"), filterFeature("-Y"), filterFeature("-Z")), ncol=nrow(y))
-    dt$featAxis <- factor(x %*% y, labels=c(NA, "X", "Y", "Z"))
+    finalDt$featAxis <- factor(x %*% y, labels=c(NA, "X", "Y", "Z"))
 
 #filtering out jerk and magnitude
-    dt$featJerk <- factor(filterFeature("Jerk"), labels=c(NA, "Jerk"))
-    dt$featMagnitude <- factor(filterFeature("Mag"), labels=c(NA, "Magnitude"))
+    finalDt$featJerk <- factor(filterFeature("Jerk"), labels=c(NA, "Jerk"))
+    finalDt$featMagnitude <- factor(filterFeature("Mag"), labels=c(NA, "Magnitude"))
 
 #creating final tidy set
 
-setkey(dt, subject, activityName, featType, featAcceleration, featInstrument, featJerk, featMagnitude, featOperation, featAxis)
-tidyDt <- dt[, list(count = .N, average = mean(value)), by=key(dt)]
+setkey(finalDt, subject, activityName, featType, featAcceleration, featInstrument, featJerk, featMagnitude, featOperation, featAxis)
+tidyDt <- finalDt[, list(count = .N, average = mean(value)), by=key(finalDt)]
 
 write.table(tidyDy,"tidyDataOutput.txt")
 
