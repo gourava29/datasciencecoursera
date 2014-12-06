@@ -1,0 +1,8 @@
+library("data.table")
+library("plyr")
+houseHoldData<-data.table(fread('household_power_consumption.txt'))
+houseHoldData<-subset(houseHoldData,Date=='1/2/2007'|Date=='2/2/2007')
+houseHoldData$Global_active_power<-as.numeric(houseHoldData$Global_active_power)
+png("plot1.png", width = 480, height = 480)
+hist(houseHoldData$Global_active_power,col="red",labels = TRUE,xlab = "Global Active Power (Kilowatts)",main = "Global Active Power")
+dev.off()
