@@ -1,0 +1,11 @@
+library("ggplot2")
+if(!is.null("NEI"))
+  NEI<-readRDS("summarySCC_PM25.rds") 
+if(!is.null("SCC"))
+  SCC <- readRDS("Source_Classification_Code.rds")
+tidyData<-merge(NEI[NEI$fips==c("06037","24510"),],SCC[grepl("Veh",SCC$Short.Name),],by="SCC")
+tidyData<-tidyData[grepl("Veh",tidyData$EI.Sector),]
+# tidyData<-merge(x=tidyData,y=SCC,by="SCC")
+png("plot6.png", width = 800, height = 800)
+print(qplot(year,Emissions,data = tidyData,color=fips,facets=.~fips))
+dev.off()
